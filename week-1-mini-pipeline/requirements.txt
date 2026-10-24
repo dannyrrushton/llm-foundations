@@ -1,0 +1,8 @@
+requests>=2.31
+trafilatura>=1.11
+datatrove[processing]>=0.10
+orjson>=3.10
+spacy>=3.7
+tokenizers>=0.20
+torch>=2.3
+datasets>=3.0
