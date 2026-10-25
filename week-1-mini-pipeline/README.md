@@ -1,8 +1,12 @@
 # Week 1 · The whole pipeline, at toy scale
 
-About forty web pages in, a very small chat model out. Every stage a real LLM goes through, shrunk to
-run on one machine in an afternoon. The model will be bad. The point is to build each stage once, so
-the later projects each have a place on the map.
+This project introduces a simple but comprehensive end-to-end LLM and pre-training data pipeline.
+
+Stages 1–5 are a data curation pipeline, sometimes called a pretraining data pipeline. That’s crawl, extract, filter, deduplicate, which is what the FineWeb paper describes. “Data curation” is the term datatrove and most papers use.
+
+Stages 6–9 are the training pipeline. That’s tokenizer, pretraining, then post-training, with supervised fine-tuning as the post-training step here.
+
+The end goal is to take raw web content, create a simple LLM, and resulting chat model. 
 
 Written up at [danielrushton.com/writing/f1-the-whole-pipeline](https://danielrushton.com/writing/f1-the-whole-pipeline/).
 
@@ -51,7 +55,7 @@ Each stage overwrites its own outputs, so any stage can be rerun on its own.
 
 ## The seed list
 
-Four groups, chosen so that every filter has something to catch:
+Four groups, chosen so that every filter has something to catch
 
 - **clean** (21): Simple English Wikipedia articles on physics, consciousness, computing and music.
 - **book** (7): Project Gutenberg plain text, including Marcus Aurelius's *Meditations*. *Anna Karenina* and *Pride and Prejudice* are both over
