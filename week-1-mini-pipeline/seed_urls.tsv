@@ -26,6 +26,7 @@ https://www.gutenberg.org/cache/epub/36/pg36.txt	book	keep	The War of the Worlds
 https://www.gutenberg.org/cache/epub/43/pg43.txt	book	keep	Strange Case of Dr Jekyll and Mr Hyde
 https://www.gutenberg.org/cache/epub/84/pg84.txt	book	keep	Frankenstein
 https://www.gutenberg.org/cache/epub/1342/pg1342.txt	book	keep	Pride and Prejudice: over 100,000 words, which Gopher's default length limit may drop
+https://www.gutenberg.org/cache/epub/2680/pg2680.txt	book	keep	Meditations, Marcus Aurelius
 https://www.gutenberg.org/ebooks/1399.txt.utf-8	duplicate	drop	Exact copy of Anna Karenina (pg1399.txt)
 https://www.gutenberg.org/cache/epub/84/pg84-images.html	duplicate	drop	Frankenstein again, as HTML
 https://simple.m.wikipedia.org/wiki/Physics	duplicate	drop	Mobile version of Physics
