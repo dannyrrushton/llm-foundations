@@ -22,10 +22,17 @@ Written up at [danielrushton.com/writing/f1-the-whole-pipeline](https://danielru
 
 Python 3.10 or later. A GPU helps but isn't needed: the defaults train in minutes on a laptop CPU.
 
-```bash
-python -m venv .venv && source .venv/bin/activate
-pip install -r requirements.txt
+Set up this project's own virtual environment from the repo root, then work inside it:
 
+```bash
+./setup_venv.sh week-1-mini-pipeline     # creates week-1-mini-pipeline/.venv and installs requirements.txt
+source week-1-mini-pipeline/.venv/bin/activate
+cd week-1-mini-pipeline
+```
+
+Then run the stages in order:
+
+```bash
 python fetch.py seed_urls.tsv     # stage 2: raw pages into data/raw/
 python extract_and_filter.py      # stages 3–4: data/clean/, and data/excluded/<filter>/ for what each dropped
 python score_filters.py           # stage 5: kept vs. expected, page by page

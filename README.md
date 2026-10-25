@@ -11,3 +11,18 @@ Four weeks of reading and one exercise per week, before the main series at
 | 4 · Evaluating LLMs | [`week-4-eval-ci`](week-4-eval-ci/) | F4 · Bootstrapping a benchmark | Planned |
 
 Each folder has its own README, `requirements.txt` and instructions.
+
+## Setup
+
+Each project runs in its own Python virtual environment, so packages never clash between projects or
+with your system Python. From the repo root:
+
+```bash
+./setup_venv.sh week-1-mini-pipeline
+source week-1-mini-pipeline/.venv/bin/activate
+```
+
+`setup_venv.sh` creates `<folder>/.venv` if it's missing and installs that folder's `requirements.txt`.
+Run it again after the requirements change. It needs Python 3.10 or later; set `PYTHON=python3.12` (or
+similar) to pick the interpreter. The scripts print a warning if they're run outside a virtual
+environment.

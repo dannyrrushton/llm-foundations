@@ -3,10 +3,16 @@
 import csv
 import json
 import math
+import sys
 from dataclasses import dataclass
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
+
+sys.path.insert(0, str(HERE.parent))
+from venv_check import warn_if_not_in_venv  # noqa: E402
+
+warn_if_not_in_venv(HERE.name)
 DATA = HERE / "data"
 RAW = DATA / "raw"              # fetch.py: one file per URL + manifest.jsonl
 EXTRACTED = DATA / "extracted"  # extract_and_filter.py, stage 1 output (before dedup)
@@ -41,6 +47,20 @@ def read_jsonl_dir(folder):
         with opener(p, "rt", encoding="utf-8") as f:
             docs += [json.loads(line) for line in f if line.strip()]
     return docs
+
+
+def load_tokenizer():
+    from tokenizers import Tokenizer
+
+    path = OUT / "tokenizer.json"
+    if not path.exists():
+        raise SystemExit("No out/tokenizer.json. Run train_tokenizer.py first.")
+    return Tokenizer.from_file(str(path))
+
+
+def require(path, previous_step):
+    if not Path(path).exists():
+        raise SystemExit(f"No {Path(path).relative_to(HERE)}. Run {previous_step} first.")
 
 
 def pick_device():

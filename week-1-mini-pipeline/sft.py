@@ -17,7 +17,7 @@ import time
 
 import torch
 
-from common import ASSISTANT, END, OUT, USER, cosine_lr, load_checkpoint, pick_device, save_checkpoint
+from common import ASSISTANT, END, OUT, USER, cosine_lr, load_checkpoint, load_tokenizer, pick_device, require, save_checkpoint
 
 
 def load_conversations(n, path=None):
@@ -61,10 +61,9 @@ def main():
     ap.add_argument("--lr", type=float, default=3e-4)
     args = ap.parse_args()
 
-    from tokenizers import Tokenizer
-
     device = pick_device()
-    tok = Tokenizer.from_file(str(OUT / "tokenizer.json"))
+    tok = load_tokenizer()
+    require(OUT / "base.pt", "pretrain.py")
     model, cfg, _ = load_checkpoint(OUT / "base.pt", device)
 
     pairs = [encode(c, tok, cfg.block_size) for c in load_conversations(args.conversations, args.data)]

@@ -8,7 +8,7 @@ import argparse
 
 import torch
 
-from common import ASSISTANT, END, OUT, USER, load_checkpoint, pick_device
+from common import ASSISTANT, END, OUT, USER, load_checkpoint, load_tokenizer, pick_device, require
 
 
 def main():
@@ -19,10 +19,9 @@ def main():
     ap.add_argument("--prompt", help="ask one question and exit")
     args = ap.parse_args()
 
-    from tokenizers import Tokenizer
-
     device = pick_device()
-    tok = Tokenizer.from_file(str(OUT / "tokenizer.json"))
+    tok = load_tokenizer()
+    require(args.checkpoint, "sft.py")
     model, _, _ = load_checkpoint(args.checkpoint, device)
     model.eval()
     end_id = tok.token_to_id(END)

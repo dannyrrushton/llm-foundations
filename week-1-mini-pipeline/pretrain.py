@@ -12,7 +12,7 @@ import time
 
 import torch
 
-from common import CLEAN, END, OUT, GPTConfig, build_model, cosine_lr, count_params, pick_device, read_jsonl_dir, save_checkpoint
+from common import CLEAN, END, OUT, GPTConfig, build_model, cosine_lr, count_params, load_tokenizer, pick_device, read_jsonl_dir, save_checkpoint
 
 
 def main():
@@ -26,11 +26,9 @@ def main():
     ap.add_argument("--seed", type=int, default=0)
     args = ap.parse_args()
 
-    from tokenizers import Tokenizer
-
     torch.manual_seed(args.seed)
     device = pick_device()
-    tok = Tokenizer.from_file(str(OUT / "tokenizer.json"))
+    tok = load_tokenizer()
     end_id = tok.token_to_id(END)
 
     # One long stream of tokens, documents separated by <|end|>; the last 10% is held out.
