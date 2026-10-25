@@ -1,6 +1,6 @@
 # llm-foundations: conventions
 
-- One folder per project (`week-N-<name>/`), each self-contained: its own `README.md`,
+- One folder per project (`fN-<name>/`, numbered to match the post: F1, F2, ...), each self-contained: its own `README.md`,
   `requirements.txt` and scripts.
 - Every project runs in its own Python virtual environment at `<folder>/.venv`, created with
   `./setup_venv.sh <folder>`. Never install packages into the system Python or with `--user`, and

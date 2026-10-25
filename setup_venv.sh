@@ -1,16 +1,16 @@
 #!/usr/bin/env bash
 # Create (or update) a project's own Python virtual environment and install its requirements.
 #
-#   ./setup_venv.sh week-1-mini-pipeline
-#   source week-1-mini-pipeline/.venv/bin/activate
+#   ./setup_venv.sh f1-mini-pipeline
+#   source f1-mini-pipeline/.venv/bin/activate
 #
 # Every project folder gets its own .venv, so one project's packages (torch, vLLM, ...) never clash
 # with another's or with the system Python. Run it again after changing requirements.txt.
-# Set PYTHON to choose the interpreter, e.g. PYTHON=python3.12 ./setup_venv.sh week-1-mini-pipeline
+# Set PYTHON to choose the interpreter, e.g. PYTHON=python3.12 ./setup_venv.sh f1-mini-pipeline
 set -euo pipefail
 
 if [ $# -ne 1 ] || [ ! -d "$1" ]; then
-  echo "usage: $0 <project-folder>    e.g. $0 week-1-mini-pipeline" >&2
+  echo "usage: $0 <project-folder>    e.g. $0 f1-mini-pipeline" >&2
   exit 1
 fi
 project="${1%/}"

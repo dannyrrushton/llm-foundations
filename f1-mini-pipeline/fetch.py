@@ -18,7 +18,7 @@ import requests
 
 from common import RAW, read_seed_list
 
-DEFAULT_UA = "llm-foundations-week1/0.1 (learning project; https://danielrushton.com)"
+DEFAULT_UA = "llm-foundations-f1/0.1 (learning project; https://danielrushton.com)"
 
 
 def robots_for(url, ua, cache):

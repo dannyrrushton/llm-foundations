@@ -1,14 +1,19 @@
 # llm-foundations
 
-Four weeks of reading and one exercise per week, before the main series at
-[danielrushton.com](https://danielrushton.com/writing/). Each week has its own folder and its own post.
+The foundations prelude to the series at [danielrushton.com](https://danielrushton.com/writing/): one
+idea per project, each built by hand and then checked against a real library. Self-paced, so posts go up
+as they're finished. Each project has its own folder and its own post.
 
-| Week | Folder | Post | Status |
-| --- | --- | --- | --- |
-| 1 · The big picture | [`week-1-mini-pipeline`](week-1-mini-pipeline/) | F1 · The whole pipeline on one page | Code ready |
-| 2 · The transformer by hand | [`week-2-nanogpt`](week-2-nanogpt/) | F2 · Training a tiny GPT on one GPU | Planned |
-| 3 · Training and inference | [`week-3-kv-cache`](week-3-kv-cache/) | F3 · How big is the KV cache? | Planned |
-| 4 · Evaluating LLMs | [`week-4-eval-ci`](week-4-eval-ci/) | F4 · Bootstrapping a benchmark | Planned |
+| Project | Folder | Status |
+| --- | --- | --- |
+| F1 · The whole pipeline on one page | [`f1-mini-pipeline`](f1-mini-pipeline/) | Code ready |
+| F2 · Gradient descent by hand | [`f2-gradient-descent`](f2-gradient-descent/) | Planned |
+| F3 · Backpropagation by hand | [`f3-backprop`](f3-backprop/) | Planned |
+| F4 · Attention by hand | [`f4-attention`](f4-attention/) | Planned |
+| F5 · Training in practice | [`f5-training`](f5-training/) | Planned |
+| F6 · Training a tiny GPT on one GPU | [`f6-nanogpt`](f6-nanogpt/) | Planned |
+| F7 · How big is the KV cache? | [`f7-kv-cache`](f7-kv-cache/) | Planned |
+| F8 · Bootstrapping a benchmark | [`f8-eval-ci`](f8-eval-ci/) | Planned |
 
 Each folder has its own README, `requirements.txt` and instructions.
 
@@ -18,8 +23,8 @@ Each project runs in its own Python virtual environment, so packages never clash
 with your system Python. From the repo root:
 
 ```bash
-./setup_venv.sh week-1-mini-pipeline
-source week-1-mini-pipeline/.venv/bin/activate
+./setup_venv.sh f1-mini-pipeline
+source f1-mini-pipeline/.venv/bin/activate
 ```
 
 `setup_venv.sh` creates `<folder>/.venv` if it's missing and installs that folder's `requirements.txt`.

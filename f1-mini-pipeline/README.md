@@ -1,4 +1,4 @@
-# Week 1 · The whole pipeline, at toy scale
+# F1 · The whole pipeline, at toy scale
 
 This project introduces a simple but comprehensive end-to-end LLM and pre-training data pipeline.
 
@@ -29,9 +29,9 @@ Python 3.10 or later. A GPU helps but isn't needed: the defaults train in minute
 Set up this project's own virtual environment from the repo root, then work inside it:
 
 ```bash
-./setup_venv.sh week-1-mini-pipeline     # creates week-1-mini-pipeline/.venv and installs requirements.txt
-source week-1-mini-pipeline/.venv/bin/activate
-cd week-1-mini-pipeline
+./setup_venv.sh f1-mini-pipeline     # creates f1-mini-pipeline/.venv and installs requirements.txt
+source f1-mini-pipeline/.venv/bin/activate
+cd f1-mini-pipeline
 ```
 
 Then run the stages in order:
