@@ -54,8 +54,8 @@ Each stage overwrites its own outputs, so any stage can be rerun on its own.
 Four groups, chosen so that every filter has something to catch:
 
 - **clean** (21): Simple English Wikipedia articles on physics, consciousness, computing and music.
-- **book** (6): Project Gutenberg plain text. *Pride and Prejudice* is over 100,000 words, past Gopher's
-  default length limit, so expect the filter to drop a page it shouldn't.
+- **book** (6): Project Gutenberg plain text. *Anna Karenina* and *Pride and Prejudice* are both over
+  100,000 words, past Gopher's default length limit, so expect the filter to drop books it shouldn't.
 - **duplicate** (5): an exact copy of a book, the same book as HTML, and mobile versions of three
   articles. MinHash should keep one of each.
 - **junk** (8): index, category, login and log pages, plus German and French articles for the language
