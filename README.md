@@ -7,9 +7,9 @@ as they're finished. Each project has its own folder and its own post.
 | Project | Folder | Status |
 | --- | --- | --- |
 | F1 · The whole pipeline on one page | [`f1-mini-pipeline`](f1-mini-pipeline/) | Code ready |
-| F2 · Gradient descent by hand | [`f2-gradient-descent`](f2-gradient-descent/) | Planned |
-| F3 · Backpropagation by hand | [`f3-backprop`](f3-backprop/) | Planned |
-| F4 · Inside the network: layers and activation functions | [`f4-layers-activations`](f4-layers-activations/) | Code ready |
+| F2 · Inside the network: layers and activation functions | [`f2-layers-activations`](f2-layers-activations/) | Code ready |
+| F3 · Gradient descent by hand | [`f3-gradient-descent`](f3-gradient-descent/) | Planned |
+| F4 · Backpropagation by hand | [`f4-backprop`](f4-backprop/) | Planned |
 | F5 · Attention by hand | [`f5-attention`](f5-attention/) | Planned |
 | F6 · Training in practice | [`f6-training`](f6-training/) | Planned |
 | F7 · Training a tiny GPT on one GPU | [`f7-nanogpt`](f7-nanogpt/) | Planned |

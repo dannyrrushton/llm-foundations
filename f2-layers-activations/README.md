@@ -1,10 +1,10 @@
-# F4 · Inside the network: layers and activation functions
+# F2 · Inside the network: layers and activation functions
 
 The tiny GPT from F1, taken apart layer by layer. What each layer does to the data, where the
 parameters live, why the network needs activation functions at all, what the common ones look like
 and why GELU (and now SwiGLU) won out for transformers.
 
-Written up at [danielrushton.com/writing/f4-layers-and-activations](https://danielrushton.com/writing/f4-layers-and-activations/) once published.
+Written up at [danielrushton.com/writing/f2-layers-and-activations](https://danielrushton.com/writing/f2-layers-and-activations/) once published.
 
 | Script | What it does | Output |
 | --- | --- | --- |
@@ -21,9 +21,9 @@ unchanged. The only addition is a switch for the MLP's activation function.
 Set up this project's own virtual environment from the repo root, then work inside it:
 
 ```bash
-./setup_venv.sh f4-layers-activations
-source f4-layers-activations/.venv/bin/activate
-cd f4-layers-activations
+./setup_venv.sh f2-layers-activations
+source f2-layers-activations/.venv/bin/activate
+cd f2-layers-activations
 ```
 
 ```bash

@@ -1,4 +1,4 @@
-"""Shared pieces for F4: paths, the tiny GPT from F1 with a swappable activation, and data loading.
+"""Shared pieces for F2: paths, the tiny GPT from F1 with a swappable activation, and data loading.
 
 The model is the same ~1M-parameter GPT as F1's pretrain.py, with the same module names, so a
 checkpoint trained there (f1-mini-pipeline/out/base.pt) loads here unchanged. The one addition is
