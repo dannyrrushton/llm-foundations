@@ -9,7 +9,7 @@ Written up at [danielrushton.com/writing/f4-layers-and-activations](https://dani
 | Script | What it does | Output |
 | --- | --- | --- |
 | `why_nonlinearity.py` | Shows that stacked linear layers collapse into one, then fits `sin(3x)` with and without activations | `out/why_nonlinearity.png` |
-| `activations.py` | Sigmoid, tanh, ReLU, Leaky ReLU, GELU (both forms), SiLU and softmax written by hand in NumPy; values checked against `torch.nn.functional`, derivatives against autograd | `out/activations.png` |
+| `activations.py` | Sigmoid, tanh, ReLU, Leaky ReLU, GELU (both forms), SiLU and softmax written by hand in NumPy; values checked against `torch.nn.functional`, derivatives against autograd; a gallery of all of them plus one labelled x/y plot per function (value, derivative, asymptotes, minimum) | `out/activations.png`, `out/activations/<name>.png` |
 | `inspect_layers.py` | Every layer of the tiny GPT with its shape and parameter count; one forward pass written out by hand and checked against the model; what GELU actually sees in each block; the top next-token predictions | `out/mlp_preactivations.png` |
 | `swap_activation.py` | Trains the same tiny GPT once per MLP activation (none, sigmoid, tanh, ReLU, GELU, SiLU, SwiGLU) and compares validation loss, dead units and speed | `out/swap_activation.png`, `.json` |
 
