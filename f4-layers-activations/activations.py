@@ -22,7 +22,10 @@ from common import OUT
 
 _erf = np.vectorize(math.erf)
 
-
+# The Sigmoid function, which is the same as the logistic function. 
+# Domain - any real number
+# range (0, 1)
+# asymptotes: y=0 as x -> -inf and y=1 as x -> inf
 def sigmoid(x):
     return 1 / (1 + np.exp(-x))
 
