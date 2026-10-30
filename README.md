@@ -32,3 +32,6 @@ source f1-mini-pipeline/.venv/bin/activate
 Run it again after the requirements change. It needs Python 3.10 or later; set `PYTHON=python3.12` (or
 similar) to pick the interpreter. The scripts print a warning if they're run outside a virtual
 environment.
+
+Output is coloured when it goes to a terminal and plain when piped or redirected. Set `NO_COLOR=1` to
+turn colour off, or `FORCE_COLOR=1` to keep it when piping into something like `less -R`.

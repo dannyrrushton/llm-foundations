@@ -13,6 +13,7 @@ import time
 import torch
 
 from common import CLEAN, END, OUT, GPTConfig, build_model, cosine_lr, count_params, load_tokenizer, pick_device, read_jsonl_dir, save_checkpoint
+from console import dim, fail, generated, heading  # common.py puts the repo root on sys.path
 
 
 def main():
@@ -39,14 +40,14 @@ def main():
     split = int(0.9 * len(data))
     train, val = data[:split], data[split:]
     if len(val) <= args.block_size + 1:
-        raise SystemExit("Not enough text for a validation split. Lower --block-size or add pages.")
+        raise fail("Not enough text for a validation split. Lower --block-size or add pages.")
 
     cfg = GPTConfig(vocab_size=tok.get_vocab_size(), block_size=args.block_size,
                     n_layer=args.n_layer, n_head=4, n_embd=args.n_embd)
     model = build_model(cfg).to(device)
     opt = torch.optim.AdamW(model.parameters(), lr=args.lr, weight_decay=0.1)
-    print(f"{len(data):,} tokens ({len(train):,} train / {len(val):,} val) · "
-          f"{count_params(model) / 1e6:.2f}M parameters · device {device}")
+    print(heading(f"{len(data):,} tokens ({len(train):,} train / {len(val):,} val) · "
+                  f"{count_params(model) / 1e6:.2f}M parameters · device {device}"))
 
     def batch(src):
         ix = torch.randint(len(src) - cfg.block_size - 1, (args.batch_size,))
@@ -71,12 +72,13 @@ def main():
         torch.nn.utils.clip_grad_norm_(model.parameters(), 1.0)
         opt.step()
         if step % 200 == 0 or step == args.steps - 1:
-            print(f"step {step:>5}  train {loss.item():.3f}  val {val_loss():.3f}  {time.time() - t0:.0f}s")
+            print(f"{dim('step')} {step:>5}  {dim('train')} {loss.item():.3f}  {dim('val')} {val_loss():.3f}  "
+                  f"{dim(f'{time.time() - t0:.0f}s')}")
 
     save_checkpoint(OUT / "base.pt", model, cfg)
     model.eval()
     prompt = torch.tensor([tok.encode("The universe").ids], device=device)
-    print("\nSample:", tok.decode(model.generate(prompt, 80, stop_id=end_id)[0].tolist()))
+    print(f"\n{heading('Sample:')}", generated(tok.decode(model.generate(prompt, 80, stop_id=end_id)[0].tolist())))
 
 
 if __name__ == "__main__":

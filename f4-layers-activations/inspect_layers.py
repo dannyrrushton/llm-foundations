@@ -21,6 +21,7 @@ import math
 import torch
 
 from common import F1_CHECKPOINT, F1_TOKENIZER, GPT, OUT, F1Tokenizer, GPTConfig, count_params, load_f1_checkpoint
+from console import check, dim, generated, heading, path, warn  # common.py puts the repo root on sys.path
 
 # The activation functions, by formula, for the hand-written pass.
 BY_HAND = {
@@ -38,7 +39,7 @@ BY_HAND = {
 def layer_table(model):
     cfg = model.cfg
     C, V, T = cfg.n_embd, cfg.vocab_size, cfg.block_size
-    print(f"\n1. The architecture  ({cfg.n_layer} blocks, width {C}, {cfg.n_head} heads, vocab {V:,}, context {T}, activation {cfg.activation})\n")
+    print(f"\n{heading('1. The architecture')}  {dim(f'({cfg.n_layer} blocks, width {C}, {cfg.n_head} heads, vocab {V:,}, context {T}, activation {cfg.activation})')}\n")
     rows = [("tok", "Embedding", f"token id -> {C}", model.tok.weight.numel()),
             ("pos", "Embedding", f"position -> {C}", model.pos.weight.numel())]
     for i, b in enumerate(model.blocks):
@@ -55,19 +56,19 @@ def layer_table(model):
              ("head", "Linear (tied)", f"{C} -> {V:,} scores", 0),
              ("softmax", "softmax", f"{V:,} scores -> probabilities", 0)]
     for name, kind, shape, n in rows:
-        print(f"  {name:<15} {kind:<15} {shape:<28} {n:>9,}")
+        print(f"  {name:<15} {dim(f'{kind:<15}')} {shape:<28} {n:>9,}")
 
     groups = {"embeddings": ("tok", "pos"), "attention": ("qkv", "proj"), "MLP": ("mlp",), "LayerNorm": ("ln",)}
     total = count_params(model)
-    print(f"\n  {total:,} parameters in all. Where they live:")
+    print(f"\n  {heading(f'{total:,}')} parameters in all. Where they live:")
     for g, keys in groups.items():
         n = sum(p.numel() for name, p in model.named_parameters() if any(k in name for k in keys) and "head" not in name)
         print(f"    {g:<11} {n:>9,}  {100 * n / total:5.1f}%")
-    print("    head        shares the token-embedding matrix (weight tying), so it adds nothing")
+    print(dim("    head        shares the token-embedding matrix (weight tying), so it adds nothing"))
 
 
 def stat(name, t, note=""):
-    print(f"  {name:<34} {str(tuple(t.shape)):<18} mean {t.mean().item():+.3f}  std {t.std().item():.3f}  {note}")
+    print(f"  {name:<34} {str(tuple(t.shape)):<18} mean {t.mean().item():+.3f}  std {t.std().item():.3f}  {dim(note)}")
 
 
 def layernorm(x, ln):
@@ -90,7 +91,7 @@ def forward_by_hand(model, idx, record):
     x = model.tok.weight[idx] + model.pos.weight[:T]          # look up rows; add position
     stat("embeddings (token + position)", x)
     for i, b in enumerate(model.blocks):
-        print(f"  -- block {i} --")
+        print(heading(f"  -- block {i} --"))
         h = layernorm(x, b.ln1)
         stat("ln1", h, "<- every token row now mean 0, std 1, then scaled")
         q, k, v = linear(h, b.qkv).split(C, dim=2)
@@ -135,11 +136,11 @@ def main():
 
     try:
         model, cfg = load_f1_checkpoint(args.checkpoint, "cpu")
-        print(f"Loaded F1's trained model from {args.checkpoint}")
+        print(f"Loaded F1's trained model from {path(args.checkpoint)}")
     except FileNotFoundError:
         cfg = GPTConfig()
         model = GPT(cfg)
-        print("No F1 checkpoint found: using a freshly initialized model of the same shape.\n"
+        print(warn("No F1 checkpoint found: using a freshly initialized model of the same shape.") + "\n"
               "(Run F1 through pretrain.py for real weights and meaningful predictions.)")
     model = model.double().eval()  # float64, so the hand-written pass can match to ~1e-12
 
@@ -149,16 +150,16 @@ def main():
         print(f"Prompt {args.prompt!r} -> {idx.shape[1]} tokens: {idx[0].tolist()}")
     else:
         idx = torch.randint(cfg.vocab_size, (1, 12))
-        print(f"No F1 tokenizer: using 12 random token ids {idx[0].tolist()}")
+        print(warn("No F1 tokenizer:") + f" using 12 random token ids {idx[0].tolist()}")
 
     layer_table(model)
 
-    print("\n2. One forward pass, by hand\n")
+    print(f"\n{heading('2. One forward pass, by hand')}\n")
     record = []
     with torch.no_grad():
         mine = forward_by_hand(model, idx, record)
         theirs, _ = model(idx)
-    print(f"\n  max |by hand - model(idx)| over all {mine.numel():,} logits: {(mine - theirs).abs().max().item():.2e}")
+    print(f"\n  max |by hand - model(idx)| over all {mine.numel():,} logits: {check((mine - theirs).abs().max().item(), 1e-9)}")  # float64
 
     import matplotlib
 
@@ -181,14 +182,14 @@ def main():
     fig.tight_layout()
     OUT.mkdir(exist_ok=True)
     fig.savefig(OUT / "mlp_preactivations.png", dpi=130)
-    print(f"\n3. wrote {OUT / 'mlp_preactivations.png'}")
+    print(f"\n{heading('3.')} wrote {path(OUT / 'mlp_preactivations.png')}")
 
     if tok:
-        print(f"\n4. What comes next after {args.prompt!r}")
+        print(f"\n{heading(f'4. What comes next after {args.prompt!r}')}")
         p = torch.softmax(theirs[0, -1], -1)
         top = torch.topk(p, 5)
         for prob, i in zip(top.values, top.indices):
-            print(f"  {prob.item():6.1%}  {tok.decode([i.item()])!r}")
+            print(f"  {prob.item():6.1%}  {generated(repr(tok.decode([i.item()])))}")
         ent = -(p * p.clamp_min(1e-30).log()).sum().item()
         print(f"  entropy {ent:.2f} nats (a uniform guess over {cfg.vocab_size:,} would be {math.log(cfg.vocab_size):.2f})")
 

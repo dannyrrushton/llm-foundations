@@ -33,6 +33,7 @@ from datatrove.pipeline.readers import JsonlReader
 from datatrove.pipeline.writers import JsonlWriter
 
 from common import CLEAN, EXCLUDED, EXTRACTED, LOGS, MINHASH, RAW, read_jsonl
+from console import fail, good  # common.py puts the repo root on sys.path
 
 
 def excluded(name):
@@ -90,7 +91,7 @@ def main():
 
     survivors = sum(1 for p in Path(EXTRACTED).glob("*.jsonl") for line in open(p) if line.strip())
     if survivors == 0:
-        raise SystemExit("No documents survived the filters, so there is nothing to deduplicate. "
+        raise fail("No documents survived the filters, so there is nothing to deduplicate. "
                          "Run score_filters.py to see which filter dropped them.")
 
     # MinHash deduplication. With 14 buckets of 8 hashes, pages sharing roughly 75% or more of their
@@ -122,7 +123,7 @@ def main():
     stage4.run()
 
     kept = sum(1 for p in Path(CLEAN).glob("*.jsonl") for line in open(p) if line.strip())
-    print(f"\n{kept} documents in data/clean/. Run score_filters.py to see what each filter dropped.")
+    print(f"\n{good(kept)} documents in data/clean/. Run score_filters.py to see what each filter dropped.")
 
 
 if __name__ == "__main__":

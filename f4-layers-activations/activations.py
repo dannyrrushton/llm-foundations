@@ -15,6 +15,9 @@ import torch.nn.functional as F
 
 import common  # noqa: F401  (venv check)
 from common import OUT
+from console import check, dim, heading, path  # common.py puts the repo root on sys.path
+
+TOL = 1e-9  # float64 on both sides: a correct formula agrees to ~1e-15
 
 # ---------------------------------------------------------------------------
 # The functions and their derivatives, by hand.
@@ -91,7 +94,7 @@ def main():
     x = np.linspace(-6, 6, 10_001)
     xt = torch.tensor(x, dtype=torch.float64, requires_grad=True)
 
-    print(f"{'function':<11} {'max |f - torch|':>16} {'max |df - autograd|':>20}   {'range':<13} {'0-centred':<9} {'flat where':<14} used in")
+    print(heading(f"{'function':<11} {'max |f - torch|':>16} {'max |df - autograd|':>20}   {'range':<13} {'0-centred':<9} {'flat where':<14} used in"))
     for name, (f, df) in FUNCS.items():
         y_t = TORCH[name](xt)
         (g_t,) = torch.autograd.grad(y_t.sum(), xt)
@@ -100,12 +103,13 @@ def main():
         mask = x != 0
         err_df = np.abs(df(x)[mask] - g_t.numpy()[mask]).max()
         rng, centred, flat, use = PROPS[name]
-        print(f"{name:<11} {err_f:>16.2e} {err_df:>20.2e}   {rng:<13} {centred:<9} {flat:<14} {use}")
+        print(f"{heading(f'{name:<11}')} {check(err_f, TOL, width=16)} {check(err_df, TOL, width=20)}   "
+              f"{rng:<13} {centred:<9} {flat:<14} {dim(use)}")
 
     # Softmax: the last step of the network, scores for every token -> a probability distribution.
     z = np.random.default_rng(0).normal(size=(4, 4096)) * 3
     err = np.abs(softmax(z) - torch.softmax(torch.tensor(z), -1).numpy()).max()
-    print(f"\nsoftmax over 4,096 scores: max |by hand - torch| = {err:.2e}; rows sum to {softmax(z).sum(-1).round(12)}")
+    print(f"\nsoftmax over 4,096 scores: max |by hand - torch| = {check(err, TOL)}; rows sum to {softmax(z).sum(-1).round(12)}")
     big = np.array([1000.0, 999.0, 0.0])
     with np.errstate(over="ignore", invalid="ignore"):
         naive = np.exp(big) / np.exp(big).sum()
@@ -133,7 +137,7 @@ def main():
     fig.tight_layout()
     OUT.mkdir(exist_ok=True)
     fig.savefig(OUT / "activations.png", dpi=130)
-    print(f"\nwrote {OUT / 'activations.png'} ({len(names)} functions)")
+    print(f"\nwrote {path(OUT / 'activations.png')} ({len(names)} functions)")
 
 
 if __name__ == "__main__":

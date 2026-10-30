@@ -17,6 +17,7 @@ import time
 import torch
 
 from common import ACTIVATIONS, GPT, OUT, GPTConfig, cosine_lr, count_params, load_corpus, pick_device
+from console import dim, fail, heading, path  # common.py puts the repo root on sys.path
 
 DEFAULT = ["none", "sigmoid", "tanh", "relu", "gelu", "silu", "swiglu"]
 
@@ -100,16 +101,16 @@ def main():
     split = int(0.9 * len(ids))
     data = (ids[:split], ids[split:])
     if len(data[1]) <= args.block_size + 1:
-        raise SystemExit("Not enough text for a validation split. Lower --block-size or use more text.")
-    print(f"{source}: {len(ids):,} tokens, vocab {tok.vocab_size:,}, device {device}, {args.steps} steps per run\n")
-    print(f"{'activation':<11} {'params':>9} {'val loss':>9} {'dead units':>11} {'ms/step':>8}")
+        raise fail("Not enough text for a validation split. Lower --block-size or use more text.")
+    print(dim(f"{source}: {len(ids):,} tokens, vocab {tok.vocab_size:,}, device {device}, {args.steps} steps per run") + "\n")
+    print(heading(f"{'activation':<11} {'params':>9} {'val loss':>9} {'dead units':>11} {'ms/step':>8}"))
 
     results = []
     for name in args.activations:
         r = run(name, data, args, device, tok.vocab_size)
         results.append(r)
         dead = "n/a" if r["dead_units"] is None else f"{100 * r['dead_units']:.1f}%"
-        print(f"{name:<11} {r['params']:>9,} {r['val_loss']:>9.3f} {dead:>11} {r['ms_per_step']:>8.1f}")
+        print(f"{heading(f'{name:<11}')} {r['params']:>9,} {r['val_loss']:>9.3f} {dead:>11} {r['ms_per_step']:>8.1f}")
 
     OUT.mkdir(exist_ok=True)
     (OUT / "swap_activation.json").write_text(json.dumps({"source": source, "args": vars(args), "results": results}, indent=2))
@@ -129,7 +130,7 @@ def main():
     ax.legend()
     fig.tight_layout()
     fig.savefig(OUT / "swap_activation.png", dpi=130)
-    print(f"\nwrote {OUT / 'swap_activation.png'} and {OUT / 'swap_activation.json'}")
+    print(f"\nwrote {path(OUT / 'swap_activation.png')} and {path(OUT / 'swap_activation.json')}")
 
 
 if __name__ == "__main__":

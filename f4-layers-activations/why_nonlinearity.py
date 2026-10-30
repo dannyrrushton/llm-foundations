@@ -15,6 +15,7 @@ import torch.nn as nn
 
 import common  # noqa: F401  (venv check)
 from common import ACTIVATIONS, OUT
+from console import check, dim, heading, path, warn  # common.py puts the repo root on sys.path
 
 
 def part1():
@@ -28,14 +29,14 @@ def part1():
     W = l3.weight @ l2.weight @ l1.weight
     b = l3.weight @ (l2.weight @ l1.bias + l2.bias) + l3.bias
     single = x @ W.T + b
-    print("Part 1: three linear layers, no activations")
+    print(heading("Part 1: three linear layers, no activations"))
     print(f"  parameters in the stack: {sum(p.numel() for m in (l1, l2, l3) for p in m.parameters()):,}")
     print(f"  one equivalent layer:    {W.numel() + b.numel():,}  (W is {tuple(W.shape)})")
-    print(f"  max |stack - single layer| = {(stacked - single).abs().max().item():.2e}\n")
+    print(f"  max |stack - single layer| = {check((stacked - single).abs().max().item(), 1e-9)}\n")  # float64
 
     with torch.no_grad():
         gelu_stack = l3(nn.functional.gelu(l2(nn.functional.gelu(l1(x)))))
-    print(f"  with GELU between them, the single layer misses by up to {(gelu_stack - single).abs().max().item():.2f}:"
+    print(f"  with GELU between them, the single layer misses by up to {warn(f'{(gelu_stack - single).abs().max().item():.2f}')}:"
           " no matrix reproduces it.\n")
 
 
@@ -44,7 +45,7 @@ def part2(steps=3000):
     x = torch.linspace(-2, 2, 400).unsqueeze(1)
     y = torch.sin(3 * x)
     results = {}
-    print("Part 2: fit y = sin(3x) with a 1 -> 64 -> 64 -> 1 MLP")
+    print(heading("Part 2: fit y = sin(3x) with a 1 -> 64 -> 64 -> 1 MLP"))
     for name in ["none", "relu", "tanh", "gelu"]:
         torch.manual_seed(0)
         act = ACTIVATIONS[name]
@@ -57,8 +58,8 @@ def part2(steps=3000):
             opt.step()
         with torch.no_grad():
             results[name] = (net(x), loss.item())
-        print(f"  {name:<5} final mean squared error {loss.item():.5f}")
-    print(f"  (a straight line's best possible error here is {line_error(x, y):.5f})")
+        print(f"  {heading(f'{name:<5}')} final mean squared error {loss.item():.5f}")
+    print(dim(f"  (a straight line's best possible error here is {line_error(x, y):.5f})"))
     return x, y, results
 
 
@@ -86,7 +87,7 @@ def main():
     fig.tight_layout()
     OUT.mkdir(exist_ok=True)
     fig.savefig(OUT / "why_nonlinearity.png", dpi=130)
-    print(f"\nwrote {OUT / 'why_nonlinearity.png'}")
+    print(f"\nwrote {path(OUT / 'why_nonlinearity.png')}")
 
 
 if __name__ == "__main__":

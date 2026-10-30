@@ -17,6 +17,7 @@ from urllib.parse import urlsplit
 import requests
 
 from common import RAW, read_seed_list
+from console import bad, dim, good, warn  # common.py puts the repo root on sys.path
 
 DEFAULT_UA = "llm-foundations-f1/0.1 (learning project; https://danielrushton.com)"
 
@@ -33,6 +34,9 @@ def robots_for(url, ua, cache):
             rp.parse([])  # robots.txt unreachable: treat as allowed, as most crawlers do
         cache[root] = rp
     return cache[root]
+
+
+STATUS_COLOR = {"ok": good, "robots_disallowed": warn}
 
 
 def main():
@@ -69,14 +73,16 @@ def main():
                 rec.update(status="fetch_error", error=str(e)[:200])
             time.sleep(args.delay)
         records.append(rec)
-        print(f"{rec['id']}  {rec['status']:<18} {url}")
+        status = STATUS_COLOR.get(rec["status"], bad)(f"{rec['status']:<18}")
+        print(f"{dim(rec['id'])}  {status} {url}")
 
     with open(RAW / "manifest.jsonl", "w", encoding="utf-8") as f:
         for rec in records:
             f.write(json.dumps(rec) + "\n")
 
     ok = sum(r["status"] == "ok" for r in records)
-    print(f"\nFetched {ok} of {len(records)}. Failures are listed above; check them before the next stage.")
+    fetched = (good if ok == len(records) else warn)(f"{ok} of {len(records)}")
+    print(f"\nFetched {fetched}. Failures are listed above; check them before the next stage.")
 
 
 if __name__ == "__main__":

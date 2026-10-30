@@ -9,6 +9,7 @@ import argparse
 import torch
 
 from common import ASSISTANT, END, OUT, USER, load_checkpoint, load_tokenizer, pick_device, require
+from console import generated, heading  # common.py puts the repo root on sys.path
 
 
 def main():
@@ -33,7 +34,7 @@ def main():
         return tok.decode([t for t in out if t != end_id]).strip()
 
     if args.prompt:
-        print(reply(args.prompt))
+        print(generated(reply(args.prompt)))
         return
     while True:
         try:
@@ -42,7 +43,7 @@ def main():
             break
         if not q:
             break
-        print("model>", reply(q))
+        print(heading("model>"), generated(reply(q)))
 
 
 if __name__ == "__main__":

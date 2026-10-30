@@ -12,6 +12,7 @@ import argparse
 from tokenizers import Tokenizer, decoders, models, pre_tokenizers, trainers
 
 from common import CLEAN, OUT, SPECIAL_TOKENS, read_jsonl_dir
+from console import dim, fail, heading  # common.py puts the repo root on sys.path
 
 
 def main():
@@ -21,7 +22,7 @@ def main():
 
     texts = [d["text"] for d in read_jsonl_dir(CLEAN)]
     if not texts:
-        raise SystemExit("No documents in data/clean/. Run extract_and_filter.py first.")
+        raise fail("No documents in data/clean/. Run extract_and_filter.py first.")
 
     tok = Tokenizer(models.BPE())
     tok.pre_tokenizer = pre_tokenizers.ByteLevel(add_prefix_space=False)
@@ -40,9 +41,9 @@ def main():
     n_chars = sum(len(t) for t in texts)
     n_tokens = sum(len(tok.encode(t).ids) for t in texts)
     sample = "Quantum mechanics describes how very small things behave."
-    print(f"Vocabulary {tok.get_vocab_size()} · {len(texts)} documents · {n_chars:,} characters -> "
-          f"{n_tokens:,} tokens ({n_chars / n_tokens:.1f} characters per token)")
-    print(f"Example: {tok.encode(sample).tokens}")
+    print(heading(f"Vocabulary {tok.get_vocab_size()} · {len(texts)} documents · {n_chars:,} characters -> "
+          f"{n_tokens:,} tokens ({n_chars / n_tokens:.1f} characters per token)"))
+    print(f"{dim('Example:')} {tok.encode(sample).tokens}")
 
 
 if __name__ == "__main__":

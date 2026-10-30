@@ -18,6 +18,7 @@ import time
 import torch
 
 from common import ASSISTANT, END, OUT, USER, cosine_lr, load_checkpoint, load_tokenizer, pick_device, require, save_checkpoint
+from console import dim, heading, path  # common.py puts the repo root on sys.path
 
 
 def load_conversations(n, path=None):
@@ -68,7 +69,7 @@ def main():
 
     pairs = [encode(c, tok, cfg.block_size) for c in load_conversations(args.conversations, args.data)]
     pairs = [p for p in pairs if any(t != -100 for t in p[1])]  # must contain some assistant text
-    print(f"{len(pairs)} conversations · device {device}")
+    print(heading(f"{len(pairs)} conversations · device {device}"))
 
     def batch():
         pick = [pairs[i] for i in torch.randint(len(pairs), (args.batch_size,))]
@@ -91,10 +92,10 @@ def main():
         torch.nn.utils.clip_grad_norm_(model.parameters(), 1.0)
         opt.step()
         if step % 100 == 0 or step == args.steps - 1:
-            print(f"step {step:>5}  loss {loss.item():.3f}  {time.time() - t0:.0f}s")
+            print(f"{dim('step')} {step:>5}  {dim('loss')} {loss.item():.3f}  {dim(f'{time.time() - t0:.0f}s')}")
 
     save_checkpoint(OUT / "chat.pt", model, cfg)
-    print("Saved out/chat.pt. Try it with: python chat.py")
+    print(f"Saved {path('out/chat.pt')}. Try it with: {heading('python chat.py')}")
 
 
 if __name__ == "__main__":

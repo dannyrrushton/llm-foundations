@@ -11,6 +11,7 @@ HERE = Path(__file__).resolve().parent
 
 sys.path.insert(0, str(HERE.parent))
 from venv_check import warn_if_not_in_venv  # noqa: E402
+from console import fail  # noqa: E402
 
 warn_if_not_in_venv(HERE.name)
 DATA = HERE / "data"
@@ -54,13 +55,13 @@ def load_tokenizer():
 
     path = OUT / "tokenizer.json"
     if not path.exists():
-        raise SystemExit("No out/tokenizer.json. Run train_tokenizer.py first.")
+        raise fail("No out/tokenizer.json. Run train_tokenizer.py first.")
     return Tokenizer.from_file(str(path))
 
 
 def require(path, previous_step):
     if not Path(path).exists():
-        raise SystemExit(f"No {Path(path).relative_to(HERE)}. Run {previous_step} first.")
+        raise fail(f"No {Path(path).relative_to(HERE)}. Run {previous_step} first.")
 
 
 def pick_device():

@@ -15,6 +15,7 @@ HERE = Path(__file__).resolve().parent
 
 sys.path.insert(0, str(HERE.parent))
 from venv_check import warn_if_not_in_venv  # noqa: E402
+from console import fail  # noqa: E402
 
 warn_if_not_in_venv(HERE.name)
 
@@ -230,7 +231,7 @@ def load_corpus(text_path=None):
         for d in docs:
             ids += tok.encode(d)
         return torch.tensor(ids, dtype=torch.long), tok, f"F1's clean text ({len(docs)} documents, BPE)"
-    raise SystemExit(
+    raise fail(
         "No training text. Either run F1 through train_tokenizer.py first (this uses its data/clean and\n"
         "tokenizer), or pass any plain-text file: --text path/to/book.txt"
     )

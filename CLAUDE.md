@@ -15,4 +15,9 @@
   project's shared module).
 - `requirements.txt` lists every package a project imports, including optional extras that libraries
   only ask for at run time (for example datatrove's `orjson` and `spacy`).
+- Console colour comes from `console.py` at the repo root (no dependencies), imported as
+  `from console import ...` after `common`. Use its semantic helpers rather than raw escape codes:
+  `heading`, `dim`, `good`/`bad`, `warn`, `path`, `generated`, `check(err, tol)` for by-hand-vs-library
+  errors, and `raise fail(msg)` for exits. Pad a field before colouring it, and keep piped output
+  identical to uncoloured output.
 - `.venv/`, `data/` and `out/` are git-ignored.
